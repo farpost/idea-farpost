@@ -63,9 +63,6 @@ public class PhpCompletionAdapter {
       result = result.withPrefixMatcher(prefixMatcher);
       addNamespacesMethod.invoke(null, normalizedNamespace, result, phpIndexAdapter.getIndex());
       final boolean restrict = parameters.getInvocationCount() <= 1 && (!nameAndNamespace.second.isEmpty() || result.getPrefixMatcher().getPrefix().length() == 0);
-      if (restrict) {
-        result.addLookupAdvertisement("Press again to see global variants.");
-      }
       for (String className : phpIndexAdapter.getAllClassNames(prefixMatcher)) {
         Collection<PsiNamedElement> classesByName = phpIndexAdapter.getClassesByName(className);
         if (restrict) {

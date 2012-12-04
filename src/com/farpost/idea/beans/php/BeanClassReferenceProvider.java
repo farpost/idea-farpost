@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
  * User: zolotov
  * Date: 12/2/12
  */
-@SuppressWarnings("unchecked")
 public class BeanClassReferenceProvider extends PsiReferenceProvider {
 
   @NotNull
