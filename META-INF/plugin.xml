@@ -1,5 +1,5 @@
 <idea-plugin version="2">
-  <id>com.yourcompany.unique.plugin.id</id>
+  <id>com.farpost.idea</id>
   <name>FarPost</name>
   <version>1.0</version>
   <vendor email="goldifit@gmail.com" url="http://farpost.com">FarPost</vendor>
