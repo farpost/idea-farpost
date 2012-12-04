@@ -4,7 +4,7 @@
 * Class completion in *class* attributes of *bean* tag
 * Resolving and find usages of php classes considering *class* attributes of *bean* tag
 
-# Install #
+## Install ##
 Add custom plugin repository:
 
 1. Settings | Plugins | Browse repositories... | Manage repositories...
