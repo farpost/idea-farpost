@@ -1,0 +1,49 @@
+<idea-plugin version="2">
+  <id>com.yourcompany.unique.plugin.id</id>
+  <name>FarPost</name>
+  <version>1.0</version>
+  <vendor email="goldifit@gmail.com" url="http://farpost.com">FarPost</vendor>
+
+  <description><![CDATA[
+      <h2>Support for FarPost frameworks</h2>
+
+      <h3>FarPost Injector<h3>
+      <p>
+        <ul>
+          <li>Class completion in <i>class</i> attributes of <i>bean</i> tag</li>
+          <li>Resolving and find usages of php classes considering <i>class</i> attributes of <i>bean</i> tag</li>
+        </ul>
+      </p>
+      ]]></description>
+
+  <change-notes><![CDATA[
+          ]]>
+  </change-notes>
+
+  <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
+  <idea-version since-build="107.105"/>
+  <depends>com.jetbrains.php</depends>
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.modules.xml</depends>
+
+  <!-- test dependencies -->
+  <depends optional="true">com.intellij.modules.ultimate</depends>
+
+  <application-components>
+    <!-- Add your application components here -->
+  </application-components>
+
+  <project-components>
+    <!-- Add your project components here -->
+  </project-components>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <psi.referenceContributor implementation="com.farpost.idea.beans.BeansReferenceContributor"/>
+    <completion.contributor language="XML" implementationClass="com.farpost.idea.beans.BeansCompletionContributor"/>
+  </extensions>
+</idea-plugin>
