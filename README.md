@@ -1,5 +1,5 @@
-## Support for FarPost frameworks##
+# Support for FarPost frameworks #
 
-# FarPost Injector #
+## FarPost Injector ##
 * Class completion in *class* attributes of *bean* tag
 * Resolving and find usages of php classes considering *class* attributes of *bean* tag
