@@ -6,7 +6,8 @@
 
 # Install #
 Add custom plugin repository:
-# Settings | Plugins | Browse repositories... | Manage repositories...
-# Add repository url *https://raw.github.com/farpost/idea-farpost/master/plugins.xml*
-# In Browser repositories dialog select added repository (combobox on the top of dialog, 'All' by default) and reload plugin list with update button
-# Install idea-farpost plugin
+
+1. Settings | Plugins | Browse repositories... | Manage repositories...
+2. Add repository url *https://raw.github.com/farpost/idea-farpost/master/plugins.xml*
+3. In Browser repositories dialog select added repository (combobox on the top of dialog, 'All' by default) and reload plugin list with update button
+4. Install idea-farpost plugin
