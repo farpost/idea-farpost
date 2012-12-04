@@ -1,0 +1,3 @@
+<plugins>
+  <plugin id="com.farpost.idea" url="idea-farpost.jar" version="1.0"/>
+</plugins>
