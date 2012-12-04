@@ -5,7 +5,6 @@
 * Resolving and find usages of php classes considering *class* attributes of *bean* tag
 
 ## Install ##
-Add custom plugin repository:
 
 1. Settings | Plugins | Browse repositories... | Manage repositories...
 2. Add repository url *https://raw.github.com/farpost/idea-farpost/master/plugins.xml*
