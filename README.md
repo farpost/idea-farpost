@@ -3,6 +3,7 @@
 ## FarPost Injector ##
 * Class completion in *class* attributes of *bean* tag
 * Resolving and find usages of php classes considering *class* attributes of *bean* tag
+* Bean property attributes completion and resolving to php setters
 
 ## Install ##
 
