@@ -15,8 +15,7 @@ import java.util.Collections;
  */
 @SuppressWarnings("All")
 public class PhpClassAdapter {
-  private static Class phpClassClass;
-
+  public static Class phpClassClass;
   private static Method getMethodsMethod;
 
   static {

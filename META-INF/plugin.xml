@@ -1,32 +1,29 @@
 <idea-plugin version="2">
   <id>com.farpost.idea</id>
   <name>FarPost</name>
-  <version>1.2</version>
+  <version>1.3</version>
   <vendor email="goldifit@gmail.com" url="http://farpost.com">FarPost</vendor>
 
   <description><![CDATA[
       <h2>Support for FarPost frameworks</h2>
-
       <h3>FarPost Injector<h3>
-      <p>
-        <ul>
-          <li>Class completion in class attributes of bean tag</li>
-          <li>Resolving and find usages of php classes considering class attributes of bean tag</li>
-          <li>Bean property attribute completion and resolving to php setters</li>
-        </ul>
-      </p>
+      <ul>
+        <li>Class completion in class attributes of bean tag</li>
+        <li>Resolving and find usages of php classes considering class attributes of bean tag</li>
+        <li>Bean property attribute completion and resolving to php setters</li>
+        <li>Toolkit bean name-attribute completion and resolving to php getters of IToolkit implementations</li>
+      </ul>
 
       <h4>Known fuckups</h4>
-      <p>
-        <ul>
-          <li>Class rename refactoring doesn't respect to bean references</li>
-          <li>Find usages for setters doesn't search property declarations in beans.xml</li>
-        </ul>
-      </p>
+      <ul>
+        <li>Class rename refactoring doesn't respect to bean references</li>
+        <li>Find usages for setters and getters doesn't search property declarations in beans.xml</li>
+      </ul>
       ]]></description>
 
   <change-notes><![CDATA[
           Added property attributes support (completion and resolving)
+          Added tookit beans support
           ]]>
   </change-notes>
 

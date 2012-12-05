@@ -1,24 +1,31 @@
 package com.farpost.idea.beans.php;
 
+import com.farpost.idea.beans.Patterns;
 import com.farpost.idea.beans.php.reflection.PhpClassAdapter;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
+import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
-import static com.farpost.idea.beans.BeansPsiUtil.getPhpClassOfParentBean;
+import static com.farpost.idea.beans.php.Util.TO_SETTER_OR_GETTER_LOOKUP;
+import static com.farpost.idea.beans.php.Util.setterOrGetterToField;
+import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Collections2.transform;
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * User: zolotov
  * Date: 12/2/12
  */
 public class BeanPropertyReferenceProvider extends PsiReferenceProvider {
-
   @NotNull
   @Override
   public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
@@ -34,25 +41,19 @@ public class BeanPropertyReferenceProvider extends PsiReferenceProvider {
 
     @NotNull
     @Override
-    public String getValue() {
-      return "set" + StringUtil.capitalize(myElement.getValue());
+    public ResolveResult[] multiResolve(boolean incompleteCode) {
+      return PsiElementResolveResult.createResults(filter(getBeanSetters(), new Predicate<PsiNamedElement>() {
+        @Override
+        public boolean apply(PsiNamedElement psiNamedElement) {
+          return getValue().equals(setterOrGetterToField(psiNamedElement.getName()));
+        }
+      }));
     }
 
     @NotNull
     @Override
-    public ResolveResult[] multiResolve(boolean incompleteCode) {
-      final String methodName = getValue();
-      final PsiElement phpClass = getPhpClassOfParentBean(myElement);
-      if (phpClass != null) {
-        final Collection<PsiNamedElement> methods = PhpClassAdapter.getAllMethods(phpClass);
-        return PsiElementResolveResult.createResults(Collections2.filter(methods, new Predicate<PsiNamedElement>() {
-          @Override
-          public boolean apply(PsiNamedElement psiNamedElement) {
-            return methodName.equals(psiNamedElement.getName());
-          }
-        }));
-      }
-      return ResolveResult.EMPTY_ARRAY;
+    public Object[] getVariants() {
+      return transform(getBeanSetters(), TO_SETTER_OR_GETTER_LOOKUP).toArray(LookupElement.EMPTY_ARRAY);
     }
 
     @NotNull
@@ -61,16 +62,45 @@ public class BeanPropertyReferenceProvider extends PsiReferenceProvider {
       return getValue();
     }
 
-    @NotNull
-    @Override
-    public Object[] getVariants() {
-      /**
-       * covered with {@link com.farpost.idea.beans.BeansCompletionContributor}
-       */
-      return PsiElement.EMPTY_ARRAY;
+    private Collection<PsiNamedElement> getBeanSetters() {
+      Collection<PsiNamedElement> result = newArrayList();
+      final PsiElement phpClass = getPhpClassOfParentBean();
+      if (phpClass != null) {
+        final Collection<PsiNamedElement> methods = PhpClassAdapter.getAllMethods(phpClass);
+        for (PsiNamedElement method : methods) {
+          final String methodName = method.getName();
+          if (Util.isSetter(methodName)) {
+            result.add(method);
+          }
+        }
+      }
+      return result;
     }
 
+    @Nullable
+    private PsiElement getPhpClassOfParentBean() {
+      final XmlAttributeValue classAttributeValue = getBeanClassAttributeValue();
+      if (classAttributeValue != null) {
+        final PsiReference reference = classAttributeValue.getReference();
+        if (reference != null) {
+          return reference.resolve();
+        }
+      }
+      return null;
+    }
 
+    @Nullable
+    private XmlAttributeValue getBeanClassAttributeValue() {
+      final PsiElement propertyTag = PsiTreeUtil.getParentOfType(myElement, XmlTag.class);
+      final XmlTag beanTag = PsiTreeUtil.getParentOfType(propertyTag, XmlTag.class);
+      if (beanTag != null && Patterns.BEAN_TAG_NAME.equals(beanTag.getLocalName())) {
+        final XmlAttribute classAttribute = beanTag.getAttribute(Patterns.CLASS_ATTRIBUTE_NAME);
+        return classAttribute != null
+                ? classAttribute.getValueElement()
+                : null;
+      }
+      return null;
+    }
   }
 }
 
