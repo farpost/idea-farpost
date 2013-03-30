@@ -26,19 +26,18 @@ import java.util.List;
  */
 @SuppressWarnings("All")
 public class PhpCompletionAdapter {
-  private static Class completionContributorProviderClass;
+  private static Class completionUtilClass;
   private static Method addNamespacesMethod;
   private static Class phpLookupElementClass;
   private static Field phpLookupElementField;
 
   static {
     try {
-      completionContributorProviderClass = Class.forName("com.jetbrains.php.completion.PhpCompletionContributor");
+      completionUtilClass = Class.forName("com.jetbrains.php.completion.PhpCompletionUtil");
       phpLookupElementClass = Class.forName("com.jetbrains.php.completion.PhpLookupElement");
       phpLookupElementField = phpLookupElementClass.getField("handler");
       addNamespacesMethod =
-        completionContributorProviderClass.getDeclaredMethod("addNamespaces", String.class, CompletionResultSet.class, PhpIndex.class);
-      addNamespacesMethod.setAccessible(true);
+        completionUtilClass.getDeclaredMethod("addSubNamespaces", String.class, CompletionResultSet.class, PhpIndex.class);
     }
     catch (ClassNotFoundException e) {
       ReflectionUtil.error(e);

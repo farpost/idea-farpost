@@ -12,6 +12,7 @@
         <li>Resolving and find usages of php classes considering class attributes of bean tag</li>
         <li>Bean property attribute completion and resolving to php setters</li>
         <li>Toolkit bean name-attribute completion and resolving to php getters of IToolkit implementations</li>
+        <li>Completion for parameter names in method declarations</li>
       </ul>
 
       <h4>Known fuckups</h4>
@@ -21,10 +22,10 @@
       </ul>
       ]]></description>
 
-  <change-notes><![CDATA[
-          Added property attributes support (completion and resolving)
-          Added tookit beans support
-          ]]>
+  <change-notes><![CDATA[<ul>
+          <li>Implemented completion for parameter names</li>
+          <li>Deleted redundant reflection</li>
+  </ul>]]>
   </change-notes>
 
   <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
