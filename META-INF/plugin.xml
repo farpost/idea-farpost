@@ -28,7 +28,7 @@
   </change-notes>
 
   <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
-  <idea-version since-build="107.105"/>
+  <idea-version since-build="127.100"/>
   <depends>com.jetbrains.php</depends>
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.lang</depends>
@@ -52,5 +52,6 @@
   <extensions defaultExtensionNs="com.intellij">
     <psi.referenceContributor implementation="com.farpost.idea.beans.BeansReferenceContributor"/>
     <completion.contributor language="XML" implementationClass="com.farpost.idea.beans.BeansCompletionContributor"/>
+    <completion.contributor language="PHP" implementationClass="com.farpost.idea.common.PhpCustomCompletionContributor" order="last"/>
   </extensions>
 </idea-plugin>
