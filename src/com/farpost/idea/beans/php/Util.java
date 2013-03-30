@@ -31,14 +31,14 @@ public class Util {
 
   public static String normalizeNamespace(final String namespace) {
     return StringUtil.startsWithChar(namespace, '\\')
-            ? namespace
-            : "\\" + namespace;
+           ? namespace
+           : "\\" + namespace;
   }
 
   public static String setterOrGetterToField(@Nullable final String setterOrGetter) {
     return setterOrGetter != null && setterOrGetter.length() > 3
-            ? StringUtil.decapitalize(setterOrGetter.substring(3))
-            : "";
+           ? StringUtil.decapitalize(setterOrGetter.substring(3))
+           : "";
   }
 
   public static boolean isSetter(@Nullable String methodName) {

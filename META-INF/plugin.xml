@@ -29,6 +29,7 @@
 
   <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
   <idea-version since-build="127.100"/>
+  <!--suppress PluginXmlValidity -->
   <depends>com.jetbrains.php</depends>
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.lang</depends>

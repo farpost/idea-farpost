@@ -1,7 +1,6 @@
 package com.farpost.idea.beans.php;
 
 import com.farpost.idea.beans.Patterns;
-import com.farpost.idea.beans.php.reflection.PhpClassAdapter;
 import com.google.common.base.Predicate;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.psi.*;
@@ -10,6 +9,8 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.util.ProcessingContext;
+import com.jetbrains.php.lang.psi.elements.Method;
+import com.jetbrains.php.lang.psi.elements.PhpClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,11 +31,11 @@ public class BeanPropertyReferenceProvider extends PsiReferenceProvider {
   @Override
   public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
     return element instanceof XmlAttributeValue
-            ? new PsiReference[]{new PhpSetterReference((XmlAttributeValue) element)}
-            : PsiReference.EMPTY_ARRAY;
+           ? new PsiReference[]{new PhpSetterReference((XmlAttributeValue)element)}
+           : PsiReference.EMPTY_ARRAY;
   }
 
-  private class PhpSetterReference extends PsiPolyVariantReferenceBase<XmlAttributeValue> {
+  private static class PhpSetterReference extends PsiPolyVariantReferenceBase<XmlAttributeValue> {
     public PhpSetterReference(XmlAttributeValue psiElement) {
       super(psiElement);
     }
@@ -64,10 +65,10 @@ public class BeanPropertyReferenceProvider extends PsiReferenceProvider {
 
     private Collection<PsiNamedElement> getBeanSetters() {
       Collection<PsiNamedElement> result = newArrayList();
-      final PsiElement phpClass = getPhpClassOfParentBean();
+      final PhpClass phpClass = getPhpClassOfParentBean();
       if (phpClass != null) {
-        final Collection<PsiNamedElement> methods = PhpClassAdapter.getAllMethods(phpClass);
-        for (PsiNamedElement method : methods) {
+        final Collection<Method> methods = phpClass.getMethods();
+        for (Method method : methods) {
           final String methodName = method.getName();
           if (Util.isSetter(methodName)) {
             result.add(method);
@@ -78,12 +79,15 @@ public class BeanPropertyReferenceProvider extends PsiReferenceProvider {
     }
 
     @Nullable
-    private PsiElement getPhpClassOfParentBean() {
+    private PhpClass getPhpClassOfParentBean() {
       final XmlAttributeValue classAttributeValue = getBeanClassAttributeValue();
       if (classAttributeValue != null) {
         final PsiReference reference = classAttributeValue.getReference();
         if (reference != null) {
-          return reference.resolve();
+          final PsiElement result = reference.resolve();
+          if (result instanceof PhpClass) {
+            return (PhpClass)result;
+          }
         }
       }
       return null;
@@ -96,8 +100,8 @@ public class BeanPropertyReferenceProvider extends PsiReferenceProvider {
       if (beanTag != null && Patterns.BEAN_TAG_NAME.equals(beanTag.getLocalName())) {
         final XmlAttribute classAttribute = beanTag.getAttribute(Patterns.CLASS_ATTRIBUTE_NAME);
         return classAttribute != null
-                ? classAttribute.getValueElement()
-                : null;
+               ? classAttribute.getValueElement()
+               : null;
       }
       return null;
     }

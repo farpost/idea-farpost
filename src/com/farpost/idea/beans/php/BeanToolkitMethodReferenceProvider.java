@@ -1,13 +1,13 @@
 package com.farpost.idea.beans.php;
 
-import com.farpost.idea.beans.php.reflection.PhpClassAdapter;
-import com.farpost.idea.beans.php.reflection.PhpImplementationsProviderAdapter;
-import com.farpost.idea.beans.php.reflection.PhpIndexAdapter;
 import com.google.common.base.Predicate;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.psi.*;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.util.ProcessingContext;
+import com.jetbrains.php.PhpIndex;
+import com.jetbrains.php.lang.psi.elements.Method;
+import com.jetbrains.php.lang.psi.elements.PhpClass;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -27,11 +27,11 @@ public class BeanToolkitMethodReferenceProvider extends PsiReferenceProvider {
   @Override
   public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
     return element instanceof XmlAttributeValue
-            ? new PsiReference[]{new PhpToolkitMethodReference((XmlAttributeValue) element)}
-            : PsiReference.EMPTY_ARRAY;
+           ? new PsiReference[]{new PhpToolkitMethodReference((XmlAttributeValue)element)}
+           : PsiReference.EMPTY_ARRAY;
   }
 
-  private class PhpToolkitMethodReference extends PsiPolyVariantReferenceBase<XmlAttributeValue> {
+  private static class PhpToolkitMethodReference extends PsiPolyVariantReferenceBase<XmlAttributeValue> {
     private static final String TOOLKIT_INTERFACE = "\\IToolkit";
 
     public PhpToolkitMethodReference(XmlAttributeValue psiElement) {
@@ -55,12 +55,13 @@ public class BeanToolkitMethodReferenceProvider extends PsiReferenceProvider {
       return transform(getAllToolkitMethods(), TO_SETTER_OR_GETTER_LOOKUP).toArray(LookupElement.EMPTY_ARRAY);
     }
 
-    private Collection<PsiNamedElement> getAllToolkitMethods() {
-      final Collection<PsiNamedElement> toolkitInterfaces = PhpIndexAdapter.getInstance(myElement.getProject()).getInterfacesByFQN(TOOLKIT_INTERFACE);
-      Collection<PsiNamedElement> toolkitMethods = newArrayList();
-      for (PsiNamedElement toolkitInterface : toolkitInterfaces) {
-        for (PsiNamedElement toolkit : PhpImplementationsProviderAdapter.getAllImplementations(toolkitInterface)) {
-          for (PsiNamedElement method : PhpClassAdapter.getAllMethods(toolkit)) {
+    private Collection<Method> getAllToolkitMethods() {
+      final PhpIndex index = PhpIndex.getInstance(myElement.getProject());
+      final Collection<PhpClass> toolkitInterfaces = index.getInterfacesByFQN(TOOLKIT_INTERFACE);
+      Collection<Method> toolkitMethods = newArrayList();
+      for (PhpClass toolkitInterface : toolkitInterfaces) {
+        for (PhpClass toolkit : index.getAllSubclasses(toolkitInterface.getFQN())) {
+          for (Method method : toolkit.getMethods()) {
             if (isGetter(method.getName())) {
               toolkitMethods.add(method);
             }

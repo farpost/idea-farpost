@@ -1,8 +1,9 @@
 package com.farpost.idea.beans.php;
 
-import com.farpost.idea.beans.php.reflection.PhpIndexAdapter;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.util.ProcessingContext;
+import com.jetbrains.php.PhpIndex;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,8 +26,9 @@ public class BeanClassReferenceProvider extends PsiReferenceProvider {
     @NotNull
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode) {
-      PhpIndexAdapter indexAdapter = PhpIndexAdapter.getInstance(getElement().getProject());
-      return PsiElementResolveResult.createResults(indexAdapter.getClassesByFQN(getValue().toLowerCase()));
+      final Project project = getElement().getProject();
+      final String fqn = getValue().toLowerCase();
+      return PsiElementResolveResult.createResults(PhpIndex.getInstance(project).getClassesByFQN(fqn));
     }
 
     @NotNull
@@ -37,7 +39,6 @@ public class BeanClassReferenceProvider extends PsiReferenceProvider {
        */
       return PsiElement.EMPTY_ARRAY;
     }
-
   }
 }
 
