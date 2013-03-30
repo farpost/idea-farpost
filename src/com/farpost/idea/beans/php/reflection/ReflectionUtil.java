@@ -10,6 +10,6 @@ public class ReflectionUtil {
   private static final Logger LOG = Logger.getInstance(ReflectionUtil.class);
 
   public static void error(Exception e) {
-    LOG.warn("Reflection error", e);
+    LOG.debug("Reflection error", e);
   }
 }
